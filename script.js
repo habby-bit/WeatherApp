@@ -3,9 +3,10 @@ $(document).ready(function() {
     var searchBtn = $("#searchBtn")
     var citySearch = $("#citySearch")
     var cityList = $("#cityList")
+    var currentStats = $("#currentStats")
+    var forecast = $("#forecast")
 
     var cities =[]
-    console.log('cities:', cities)
     
     renderCity();
 
@@ -15,7 +16,6 @@ $(document).ready(function() {
 
         for (var i=0; i < cities.length; i++) {
             var city = cities[i];
-            console.log('city:', city)
 
             var cityBtn = $("<button>");
             cityBtn.addClass("list-group-item list-group-item-action")
@@ -29,10 +29,9 @@ $(document).ready(function() {
     function renderWeather() {
 
         cityText = cityInput.val();
-        console.log('cityText:', cityText)
 
         //Constructing the queryURL with the city name
-        var queryURL = "api.openweathermap.org/data/2.5/weather?q=" + cityText +  "&appid=c64bb7a089eff4f5f10b6286807da6d0";
+        var queryURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityText + '&appid=c64bb7a089eff4f5f10b6286807da6d0';
 
         // Performing the ajax request with queryURL
         $.ajax({
@@ -42,24 +41,70 @@ $(document).ready(function() {
 
         .then(function(response) {
             console.log(queryURL)
-            console.log(response)
+            console.log('response:', response)
+
+            currentStats.text("")
+        
+            var lat = response.coord.lat
+            var lon = response.coord.lon
+
+            var forecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&exclude=&appid=c64bb7a089eff4f5f10b6286807da6d0"
+
+            $.ajax({
+                url: forecastURL,
+                method: "GET"
+            })
+
+            .then(function(response) {
+                console.log(forecastURL)
+                console.log('response:', response)
+
+                currentDiv = $("<div>")
+
+                // var p = $("<p>").text("Rating: " + results[i].rating);
+
+                var temp = $("<p>").text("Temperature: " + response.current.temp)
+                var humidity = $("<p>").text("Humidity: " + response.current.humidity)
+                var wind = $("<p>").text("Wind Speed: " + response.current.wind)
+                var uvi = $("<p>").text("UV Index: " + response.current.uvi)
+
+                currentDiv.append(cityText + " (" + moment().format('l') + ")")
+                currentDiv.append(temp, humidity, wind, uvi)
+
+                currentStats.append(currentDiv)
+                
+                
+                // var date = response.daily[0].date
+
+                // add1 = moment().add(1, 'days').format('l');;
+                // add2 = moment().add(2, 'days').format('l');;
+                // add3 = moment().add(3, 'days').format('l');;
+                // add4 = moment().add(4, 'days').format('l');;
+                // add5 = moment().add(5, 'days').format('l');;
+
+
+            });
+
         });
     }
 
     // When the city is searched...
-    citySearch.submit(function() {
+    citySearch.submit(function(event) {
+        event.preventDefault();
+
         var cityText = cityInput.val();
-        console.log('cityText:', cityText)
 
         if (cityText === "") {
             return;
         }
 
         cities.push(cityText);
-        // cityInput.val("")
-
+        
         renderCity();
         renderWeather();
+
+        cityInput.val("")
+
     });
 
 });
