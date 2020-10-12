@@ -18,7 +18,7 @@ $(document).ready(function() {
             var city = cities[i];
 
             var cityBtn = $("<button>");
-            cityBtn.addClass("list-group-item list-group-item-action")
+            cityBtn.addClass("list-group-item list-group-item-action cityButton")
             cityBtn.text(city)
 
             cityList.append(cityBtn)
@@ -26,7 +26,15 @@ $(document).ready(function() {
     }
 
     //Render the Weather Dashboard
+
+
+
     function renderWeather() {
+
+        $(".cityButton").click(function() {
+            var prevCity = this.innerHTML
+            cityText = prevCity
+        });
 
         cityText = cityInput.val();
 
@@ -59,33 +67,45 @@ $(document).ready(function() {
                 console.log(forecastURL)
                 console.log('response:', response)
 
+            
+
+
                 currentDiv = $("<div>")
 
-                // var p = $("<p>").text("Rating: " + results[i].rating);
-
+                var city = $("<p>").text(cityText + " (" + moment().format('l') + ")")
                 var temp = $("<p>").text("Temperature: " + response.current.temp)
                 var humidity = $("<p>").text("Humidity: " + response.current.humidity)
                 var wind = $("<p>").text("Wind Speed: " + response.current.wind)
                 var uvi = $("<p>").text("UV Index: " + response.current.uvi)
 
-                currentDiv.append(cityText + " (" + moment().format('l') + ")")
-                currentDiv.append(temp, humidity, wind, uvi)
+                currentDiv.append(city, temp, humidity, wind, uvi)
 
+                currentStats.addClass("jumbotron jumbotron-fluid")
                 currentStats.append(currentDiv)
-                
-                
-                // var date = response.daily[0].date
 
-                // add1 = moment().add(1, 'days').format('l');;
-                // add2 = moment().add(2, 'days').format('l');;
-                // add3 = moment().add(3, 'days').format('l');;
-                // add4 = moment().add(4, 'days').format('l');;
-                // add5 = moment().add(5, 'days').format('l');;
+                forecast.text("")
 
+                for (var i=0; i<5; i++) {
 
+                    var futureStat = $("<li>") 
+
+                    var day = $("<p>").text(moment().add((i+1), 'days').format('l'));
+                    var fTemp = $("<p>").text("Temp: " + response.daily[i].temp.day);
+                    var fHum = $("<p>").text("Humidity: " + response.daily[i].humidity);
+
+                    futureStat.append(day, fTemp, fHum)
+                    futureStat.addClass("list-group-item mr-3 futBox")
+
+                    forecast.append(futureStat)
+                }
             });
 
         });
+
+
+
+
+
     }
 
     // When the city is searched...
@@ -99,6 +119,7 @@ $(document).ready(function() {
         }
 
         cities.push(cityText);
+        console.log('cities:', cities)
         
         renderCity();
         renderWeather();
