@@ -28,15 +28,15 @@ $(document).ready(function() {
     //Render the Weather Dashboard
 
 
+    $(document).on("click", ".cityButton", (function() {
+        var prevCity = this.innerHTML
+        cityText = prevCity
+        renderWeather(cityText)
+    }));
 
-    function renderWeather() {
 
-        $(".cityButton").click(function() {
-            var prevCity = this.innerHTML
-            cityText = prevCity
-        });
+    function renderWeather(cityText) {
 
-        cityText = cityInput.val();
 
         //Constructing the queryURL with the city name
         var queryURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityText + '&appid=c64bb7a089eff4f5f10b6286807da6d0';
@@ -122,7 +122,7 @@ $(document).ready(function() {
         console.log('cities:', cities)
         
         renderCity();
-        renderWeather();
+        renderWeather(cityText);
 
         cityInput.val("")
 
