@@ -74,12 +74,26 @@ $(document).ready(function() {
                 var iconLink = "http://openweathermap.org/img/wn/" + iconCode + "@2x.png"
                 icon.attr("src", iconLink)
 
-                var city = $("<p>").text(cityText + " (" + moment().format('l') + ")").append(icon)
-                var temp = $("<p>").text("Temperature: " + response.current.temp)
-                var humidity = $("<p>").text("Humidity: " + response.current.humidity)
-                var wind = $("<p>").text("Wind Speed: " + response.current.wind_speed)
-                var uvi = $("<p>").text("UV Index: " + response.current.uvi)
+                var city = $("<h2>").text(cityText + " (" + moment().format('l') + ")").append(icon)
+                var temp = $("<h5>").text("Temperature: " + response.current.temp.toFixed(1) + " °F")
+                var humidity = $("<h5>").text("Humidity: " + response.current.humidity + "%")
+                var wind = $("<h5>").text("Wind Speed: " + response.current.wind_speed + " MPH")
 
+                var uviNum = response.current.uvi
+                var uviP = $("<h5>").text(uviNum).attr("id","uviNum")
+
+                if (uviNum <= 2) {
+                    uviP.addClass("uviNumG")
+                }
+                else if (uviNum > 2 && uviNum < 7) {
+                    uviP.addClass("uviNumY")
+                }
+                else if (uviNum >= 7) {
+                    uviP.addClass("uviNumR")
+                }
+
+                var uvi = $("<h5>").text("UV Index: ").append(uviP).attr("id","uvi")
+                
                 currentDiv.append(city, temp, humidity, wind, uvi)
 
                 currentStats.addClass("jumbotron jumbotron-fluid")
@@ -91,18 +105,20 @@ $(document).ready(function() {
 
                     var futureStat = $("<li>") 
 
-                    var day = $("<p>").text(moment().add((i+1), 'days').format('l'));
+                    var day = $("<h5>").text(moment().add((i+1), 'days').format('l'));
 
                     var ficonCode = response.daily[i].weather[0].icon
                     var ficon = $("<img>")
                     var ficonLink = "http://openweathermap.org/img/wn/" + ficonCode + "@2x.png"
                     ficon.attr("src", ficonLink)
 
-                    var fTemp = $("<p>").text("Temp: " + response.daily[i].temp.day);
-                    var fHum = $("<p>").text("Humidity: " + response.daily[i].humidity);
+                    var fTemp = $("<h6>").text("Temp: " + response.daily[i].temp.day.toFixed(1) + " °F");
+                    var fHum = $("<h6>").text("Humidity: " + response.daily[i].humidity + "%");
 
                     futureStat.append(day, ficon, fTemp, fHum)
-                    futureStat.addClass("list-group-item mr-3 futBox")
+                    futureStat.addClass("list-group-item futBox")
+
+                    futureStat.attr("id", "fbox"+i)
 
                     forecast.append(futureStat)
                 }
