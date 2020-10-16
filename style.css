@@ -1,3 +1,10 @@
+/* Styling for the Weather Dashboard heading */
+#bootstrap-overrides nav{
+    border-bottom: 2px solid black;
+}
+
+/* Styling fo the current weather dashboard */
+
 .jumbotron {
     background-color: plum;
     width: 100%;
@@ -8,6 +15,8 @@
     border-radius: 5px;
     border: 2px solid black;
 }
+
+/* Styling for the UV Index number. Good, Moderate, Dangerous. */
 
 .uviNumG {
     box-sizing: border-box;
@@ -49,6 +58,8 @@
     float: left;
 }
 
+/* Styling for the 5 day forecast. */
+
 .futBox {
     text-align: center;
     box-sizing: border-box;
@@ -60,10 +71,6 @@
 #bootstrap-overrides .futBox{
     border: 2px solid black;
     border-radius: 5px;
-}
-
-#bootstrap-overrides nav{
-    border-bottom: 2px solid black;
 }
 
 #fbox1,

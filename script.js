@@ -1,10 +1,10 @@
 $(document).ready(function() {
     var cityInput = $("#cityText")
-    var searchBtn = $("#searchBtn")
     var citySearch = $("#citySearch")
     var cityList = $("#cityList")
     var currentStats = $("#currentStats")
     var forecast = $("#forecast")
+    var forecastText = $("#forecastText")
 
     var cities =[]
     
@@ -18,6 +18,7 @@ $(document).ready(function() {
             var city = cities[i];
 
             var cityBtn = $("<button>");
+            
             cityBtn.addClass("list-group-item list-group-item-action cityButton")
             cityBtn.text(city)
 
@@ -26,8 +27,6 @@ $(document).ready(function() {
     }
 
     //Render the Weather Dashboard
-
-
     $(document).on("click", ".cityButton", (function() {
         var prevCity = this.innerHTML
         cityText = prevCity
@@ -36,7 +35,6 @@ $(document).ready(function() {
 
 
     function renderWeather(cityText) {
-
 
         //Constructing the queryURL with the city name
         var queryURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityText + '&appid=c64bb7a089eff4f5f10b6286807da6d0';
@@ -48,25 +46,26 @@ $(document).ready(function() {
         })
 
         .then(function(response) {
-            console.log(queryURL)
-            console.log('response:', response)
-
+            
+            // Clearing the dashboard to allow it to contain the new city information
             currentStats.text("")
         
             var lat = response.coord.lat
             var lon = response.coord.lon
 
+            // Constructing the forecastURL with the lat and lon coordinates 
             var forecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&exclude=&appid=c64bb7a089eff4f5f10b6286807da6d0"
 
+
+            // Performing the ajax request with forecastURL
             $.ajax({
                 url: forecastURL,
                 method: "GET"
             })
 
             .then(function(response) {
-                console.log(forecastURL)
-                console.log('response:', response)
 
+                // Creating and assigning value/text to each information variable
                 currentDiv = $("<div>")
 
                 var iconCode = response.current.weather[0].icon
@@ -82,6 +81,7 @@ $(document).ready(function() {
                 var uviNum = response.current.uvi
                 var uviP = $("<h5>").text(uviNum).attr("id","uviNum")
 
+                // Determining the health level of the UV Index and assigning the appropriate class
                 if (uviNum <= 2) {
                     uviP.addClass("uviNumG")
                 }
@@ -94,15 +94,24 @@ $(document).ready(function() {
 
                 var uvi = $("<h5>").text("UV Index: ").append(uviP).attr("id","uvi")
                 
+                // Appending all of the information to the current weather div
                 currentDiv.append(city, temp, humidity, wind, uvi)
 
                 currentStats.addClass("jumbotron jumbotron-fluid")
+
+                // Appending all of the information to the page
                 currentStats.append(currentDiv)
 
+                // Clearing the forecast to allow it to contain the new city information
                 forecast.text("")
 
+                // Appending the title to the 5 day forecast
+                forecastText.text("5 Day Forecast: ")
+
+                // Looping through to append the information for each day in the forecast
                 for (var i=0; i<5; i++) {
 
+                    // Creating and assigning value/text to each information variable
                     var futureStat = $("<li>") 
 
                     var day = $("<h5>").text(moment().add((i+1), 'days').format('l'));
@@ -115,21 +124,18 @@ $(document).ready(function() {
                     var fTemp = $("<h6>").text("Temp: " + response.daily[i].temp.day.toFixed(1) + " °F");
                     var fHum = $("<h6>").text("Humidity: " + response.daily[i].humidity + "%");
 
+                    // Appending all of the information to the specific day
                     futureStat.append(day, ficon, fTemp, fHum)
                     futureStat.addClass("list-group-item futBox")
 
+                    // Assiging each day a unique id for later styling
                     futureStat.attr("id", "fbox"+i)
 
+                    // Appending all of the information to the page
                     forecast.append(futureStat)
                 }
             });
-
         });
-
-
-
-
-
     }
 
     // When the city is searched...
@@ -149,7 +155,5 @@ $(document).ready(function() {
         renderWeather(cityText);
 
         cityInput.val("")
-
     });
-
 });
