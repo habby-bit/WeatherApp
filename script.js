@@ -6,15 +6,22 @@ $(document).ready(function() {
     var forecast = $("#forecast")
     var forecastText = $("#forecastText")
 
-    var cities =[]
-    
+    const LOCAL_STORAGE_LIST_KEY = 'city.list'
+    const LOCAL_STORAGE_SELECTED_CITY_ID_KEY = 'city.selectedListId'
+
+
+    let cities = JSON.parse(localStorage.getItem(LOCAL_STORAGE_LIST_KEY)) || []
+    let cityText = localStorage.getItem(LOCAL_STORAGE_SELECTED_CITY_ID_KEY)
+
     renderCity();
+    renderWeather(cityText);
 
     // Render a new list item for each city
     function renderCity() {
         cityList.text("");
 
         for (var i=0; i < cities.length; i++) {
+            
             var city = cities[i];
 
             var cityBtn = $("<button>");
@@ -30,9 +37,9 @@ $(document).ready(function() {
     $(document).on("click", ".cityButton", (function() {
         var prevCity = this.innerHTML
         cityText = prevCity
+        localStorage.setItem(LOCAL_STORAGE_SELECTED_CITY_ID_KEY, cityText)
         renderWeather(cityText)
     }));
-
 
     function renderWeather(cityText) {
 
@@ -46,7 +53,7 @@ $(document).ready(function() {
         })
 
         .then(function(response) {
-            
+
             // Clearing the dashboard to allow it to contain the new city information
             currentStats.text("")
         
@@ -55,7 +62,6 @@ $(document).ready(function() {
 
             // Constructing the forecastURL with the lat and lon coordinates 
             var forecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&exclude=&appid=c64bb7a089eff4f5f10b6286807da6d0"
-
 
             // Performing the ajax request with forecastURL
             $.ajax({
@@ -143,13 +149,14 @@ $(document).ready(function() {
         event.preventDefault();
 
         var cityText = cityInput.val();
+        console.log('cityText:', cityText)
 
         if (cityText === "") {
             return;
         }
 
         cities.push(cityText);
-        console.log('cities:', cities)
+        localStorage.setItem(LOCAL_STORAGE_LIST_KEY, JSON.stringify(cities))
         
         renderCity();
         renderWeather(cityText);

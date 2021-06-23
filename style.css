@@ -1,10 +1,19 @@
+body {
+    background-color: #e3f2fd;;
+}
+
 /* Styling for the Weather Dashboard heading */
 #bootstrap-overrides nav{
     border-bottom: 2px solid black;
 }
 
-/* Styling fo the current weather dashboard */
 
+.cityButton {
+    border: 1px solid black;
+}
+
+
+/* Styling for the current weather dashboard */
 .jumbotron {
     background-color: plum;
     width: 100%;
