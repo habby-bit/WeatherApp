@@ -1,10 +1,10 @@
 $(document).ready(function() {
-    var cityInput = $("#cityText")
-    var citySearch = $("#citySearch")
-    var cityList = $("#cityList")
-    var currentStats = $("#currentStats")
-    var forecast = $("#forecast")
-    var forecastText = $("#forecastText")
+    const cityInput = $("#cityText")
+    const citySearch = $("#citySearch")
+    const cityList = $("#cityList")
+    const currentStats = $("#currentStats")
+    const forecast = $("#forecast")
+    const forecastText = $("#forecastText")
 
     const LOCAL_STORAGE_LIST_KEY = 'city.list'
     const LOCAL_STORAGE_SELECTED_CITY_ID_KEY = 'city.selectedListId'
@@ -20,11 +20,11 @@ $(document).ready(function() {
     function renderCity() {
         cityList.text("");
 
-        for (var i=0; i < cities.length; i++) {
+        for (let i=0; i<cities.length; i++) {
             
-            var city = cities[i];
+            const city = cities[i];
 
-            var cityBtn = $("<button>");
+            const cityBtn = $("<button>");
             
             cityBtn.addClass("list-group-item list-group-item-action cityButton")
             cityBtn.text(city)
@@ -35,7 +35,7 @@ $(document).ready(function() {
 
     //Render the Weather Dashboard
     $(document).on("click", ".cityButton", (function() {
-        var prevCity = this.innerHTML
+        const prevCity = this.innerHTML
         cityText = prevCity
         localStorage.setItem(LOCAL_STORAGE_SELECTED_CITY_ID_KEY, cityText)
         renderWeather(cityText)
@@ -44,7 +44,7 @@ $(document).ready(function() {
     function renderWeather(cityText) {
 
         //Constructing the queryURL with the city name
-        var queryURL = 'https://api.openweathermap.org/data/2.5/weather?q=' + cityText + '&appid=c64bb7a089eff4f5f10b6286807da6d0';
+        const queryURL = `https://api.openweathermap.org/data/2.5/weather?q=${cityText}&appid=c64bb7a089eff4f5f10b6286807da6d0`;
 
         // Performing the ajax request with queryURL
         $.ajax({
@@ -57,11 +57,12 @@ $(document).ready(function() {
             // Clearing the dashboard to allow it to contain the new city information
             currentStats.text("")
         
-            var lat = response.coord.lat
-            var lon = response.coord.lon
+            const lat = response.coord.lat
+            const lon = response.coord.lon
 
             // Constructing the forecastURL with the lat and lon coordinates 
-            var forecastURL = "https://api.openweathermap.org/data/2.5/onecall?lat=" + lat + "&lon=" + lon + "&units=imperial&exclude=&appid=c64bb7a089eff4f5f10b6286807da6d0"
+            const forecastURL = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&units=imperial&exclude=&appid=c64bb7a089eff4f5f10b6286807da6d0`
+            console.log('forecastURL:', forecastURL)
 
             // Performing the ajax request with forecastURL
             $.ajax({
@@ -74,18 +75,18 @@ $(document).ready(function() {
                 // Creating and assigning value/text to each information variable
                 currentDiv = $("<div>")
 
-                var iconCode = response.current.weather[0].icon
-                var icon = $("<img>")
-                var iconLink = "http://openweathermap.org/img/wn/" + iconCode + "@2x.png"
+                const iconCode = response.current.weather[0].icon
+                const icon = $("<img>")
+                const iconLink = `http://openweathermap.org/img/wn/${iconCode}@2x.png`
                 icon.attr("src", iconLink)
 
-                var city = $("<h2>").text(cityText + " (" + moment().format('l') + ")").append(icon)
-                var temp = $("<h5>").text("Temperature: " + response.current.temp.toFixed(1) + " °F")
-                var humidity = $("<h5>").text("Humidity: " + response.current.humidity + "%")
-                var wind = $("<h5>").text("Wind Speed: " + response.current.wind_speed + " MPH")
+                const city = $("<h2>").text(cityText + " (" + moment().format('l') + ")").append(icon)
+                const temp = $("<h5>").text("Temperature: " + response.current.temp.toFixed(1) + " °F")
+                const humidity = $("<h5>").text("Humidity: " + response.current.humidity + "%")
+                const wind = $("<h5>").text("Wind Speed: " + response.current.wind_speed + " MPH")
 
-                var uviNum = response.current.uvi
-                var uviP = $("<h5>").text(uviNum).attr("id","uviNum")
+                const uviNum = response.current.uvi
+                const uviP = $("<h5>").text(uviNum).attr("id","uviNum")
 
                 // Determining the health level of the UV Index and assigning the appropriate class
                 if (uviNum <= 2) {
@@ -98,7 +99,7 @@ $(document).ready(function() {
                     uviP.addClass("uviNumR")
                 }
 
-                var uvi = $("<h5>").text("UV Index: ").append(uviP).attr("id","uvi")
+                const uvi = $("<h5>").text("UV Index: ").append(uviP).attr("id","uvi")
                 
                 // Appending all of the information to the current weather div
                 currentDiv.append(city, temp, humidity, wind, uvi)
@@ -115,20 +116,20 @@ $(document).ready(function() {
                 forecastText.text("5 Day Forecast: ")
 
                 // Looping through to append the information for each day in the forecast
-                for (var i=0; i<5; i++) {
+                for (let i=0; i<5; i++) {
 
                     // Creating and assigning value/text to each information variable
-                    var futureStat = $("<li>") 
+                    const futureStat = $("<li>") 
 
-                    var day = $("<h5>").text(moment().add((i+1), 'days').format('l'));
+                    const day = $("<h5>").text(moment().add((i+1), 'days').format('l'));
 
-                    var ficonCode = response.daily[i].weather[0].icon
-                    var ficon = $("<img>")
-                    var ficonLink = "http://openweathermap.org/img/wn/" + ficonCode + "@2x.png"
+                    const ficonCode = response.daily[i].weather[0].icon
+                    const ficon = $("<img>")
+                    const ficonLink = `http://openweathermap.org/img/wn/${ficonCode}@2x.png`
                     ficon.attr("src", ficonLink)
 
-                    var fTemp = $("<h6>").text("Temp: " + response.daily[i].temp.day.toFixed(1) + " °F");
-                    var fHum = $("<h6>").text("Humidity: " + response.daily[i].humidity + "%");
+                    const fTemp = $("<h6>").text("Temp: " + response.daily[i].temp.day.toFixed(1) + " °F");
+                    const fHum = $("<h6>").text("Humidity: " + response.daily[i].humidity + "%");
 
                     // Appending all of the information to the specific day
                     futureStat.append(day, ficon, fTemp, fHum)
@@ -148,7 +149,7 @@ $(document).ready(function() {
     citySearch.submit(function(event) {
         event.preventDefault();
 
-        var cityText = cityInput.val();
+        const cityText = cityInput.val();
         console.log('cityText:', cityText)
 
         if (cityText === "") {

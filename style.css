@@ -1,5 +1,7 @@
+/* Body Styling */
 body {
-    background-color: #e3f2fd;;
+    background-color: #e3f2fd;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Styling for the Weather Dashboard heading */
@@ -7,9 +9,9 @@ body {
     border-bottom: 2px solid black;
 }
 
-
+/* City Buttons */
 .cityButton {
-    border: 1px solid black;
+    border: 2px solid black;
 }
 
 
@@ -75,6 +77,8 @@ body {
     background-color: peachpuff;
     width: 100%;
     margin-bottom: 5%;
+    padding-left: 0;
+    padding-right: 0;
 }
 
 #bootstrap-overrides .futBox{
@@ -86,5 +90,5 @@ body {
 #fbox2,
 #fbox3,
 #fbox4 {
-    margin-left: 5px;
+    margin-left: 10px;
 }
