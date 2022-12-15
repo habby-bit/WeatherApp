@@ -1,7 +1,7 @@
 /* Body Styling */
 body {
-    background-color: #e3f2fd;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #c8e8ff;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* Styling for the Weather Dashboard heading */
@@ -81,7 +81,7 @@ body {
     padding-right: 0;
 }
 
-#bootstrap-overrides .futBox{
+#bootstrap-overrides .futBox {
     border: 2px solid black;
     border-radius: 5px;
 }
